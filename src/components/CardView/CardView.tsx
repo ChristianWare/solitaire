@@ -1,9 +1,9 @@
 "use client";
 
-import styles from "./CardView.module.css";
+import React from "react";
 import { Card } from "@/lib/deck";
 
-function rankToString(rank: number): string {
+function rankToShortString(rank: number): string {
   switch (rank) {
     case 1:
       return "A";
@@ -14,10 +14,9 @@ function rankToString(rank: number): string {
     case 13:
       return "K";
     default:
-      return rank.toString(); // 2..10
+      return rank.toString();
   }
 }
-
 function getSuitSymbol(suit: string): string {
   switch (suit) {
     case "hearts":
@@ -32,32 +31,30 @@ function getSuitSymbol(suit: string): string {
       return "";
   }
 }
-
 function getSuitColor(suit: string): string {
   return suit === "hearts" || suit === "diamonds" ? "red" : "black";
 }
 
-interface CardProps {
+interface CardViewProps {
   card: Card;
-  width?: number; // optional width, default 80
-  height?: number; // optional height, default 120
+  width?: number;
+  height?: number;
 }
 
 export default function CardView({
   card,
   width = 80,
   height = 120,
-}: CardProps) {
-  // If card is face-down, show a distinct design (e.g., a colored back)
+}: CardViewProps) {
   if (!card.faceUp) {
     return (
       <div
         style={{
           width: `${width}px`,
           height: `${height}px`,
-          backgroundColor: "#444", // or any color/pattern
+          backgroundColor: "#444",
           border: "1px solid #999",
-          borderRadius: "8px",
+          borderRadius: "6px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -70,30 +67,65 @@ export default function CardView({
     );
   }
 
-  // Face-up styling
-  const rankStr = rankToString(card.rank);
-  const suitSymbol = getSuitSymbol(card.suit);
+  const rankStr = rankToShortString(card.rank);
+  const suitSym = getSuitSymbol(card.suit);
   const suitColor = getSuitColor(card.suit);
 
   return (
     <div
-      className={`${styles.cardContainer} ${styles.faceUp}`}
-      style={{ color: suitColor }}
+      style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        backgroundColor: "white",
+        border: "1px solid #999",
+        borderRadius: "6px",
+        position: "relative",
+        color: suitColor,
+        fontFamily: "sans-serif",
+      }}
     >
-      <div className={styles.topLeft}>
+      {/* Top-left corner */}
+      <div
+        style={{
+          position: "absolute",
+          top: "4px",
+          left: "4px",
+          fontSize: "0.8rem",
+          lineHeight: "1.1rem",
+        }}
+      >
         {rankStr}
         <br />
-        {suitSymbol}
+        {suitSym}
       </div>
 
       {/* Center suit symbol */}
-      <div className={styles.center}>{suitSymbol}</div>
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          fontSize: "1.4rem",
+        }}
+      >
+        {suitSym}
+      </div>
 
-      {/* Bottom-right corner */}
-      <div className={styles.bottomRight}>
+      {/* Bottom-right corner (rotated 180°) */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "4px",
+          right: "4px",
+          fontSize: "0.8rem",
+          lineHeight: "1.1rem",
+          transform: "rotate(180deg)",
+        }}
+      >
         {rankStr}
         <br />
-        {suitSymbol}
+        {suitSym}
       </div>
     </div>
   );

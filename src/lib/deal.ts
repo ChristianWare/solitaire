@@ -8,8 +8,7 @@ export function dealTableau(deck: Card[]): Card[][] {
     for (let row = 0; row <= col; row++) {
       const card = deck[index];
       if (row === col) {
-        // The top card (last in each column) is face up
-        card.faceUp = true;
+        card.faceUp = true; // top card face up
       }
       tableau[col].push(card);
       index++;

@@ -1,14 +1,14 @@
-// DraggableCard.tsx
+"use client";
 
 import React from "react";
 import { useDrag } from "react-dnd";
-import CardView from "@/components/CardView/CardView"; // example import
-import { Card } from "../../lib/deck";
+import CardView from "@/components/CardView/CardView";
+import { Card } from "@/lib/deck";
 
 interface DraggableCardProps {
   card: Card;
-  columnIndex: number;
-  cardIndex: number;
+  columnIndex: number; // if -1 => from waste, else from a tableau col
+  cardIndex: number; // index in that column or waste
 }
 
 export default function DraggableCard({
@@ -16,13 +16,13 @@ export default function DraggableCard({
   columnIndex,
   cardIndex,
 }: DraggableCardProps) {
-  // Here we specify our item type and the data we'll pass when dragging
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "CARD", // must match "accept" in your drop target
+  const [{ isDragging }, dragRef] = useDrag(() => ({
+    type: "CARD",
     item: {
       fromCol: columnIndex,
       fromIndex: cardIndex,
       card,
+      type: "CARD",
     },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
@@ -31,8 +31,7 @@ export default function DraggableCard({
 
   return (
     <div
-      // Type assertion: tell TypeScript that "drag" can be used as a ref
-      ref={drag as unknown as React.Ref<HTMLDivElement>}
+      ref={dragRef as unknown as React.Ref<HTMLDivElement>}
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: card.faceUp ? "grab" : "default",

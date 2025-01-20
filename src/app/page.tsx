@@ -3,10 +3,14 @@
 import { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Card, createDeck, shuffleDeck } from "../lib/deck";
-import { dealTableau } from "../lib/deal";
+
+import { Card, createDeck, shuffleDeck } from "@/lib/deck";
+import { dealTableau } from "@/lib/deal";
+
 import CardView from "@/components/CardView/CardView";
 import DropColumn from "@/components/DropColumn/DropColumn";
+import DraggableCard from "@/components/DraggableCard/DraggableCard";
+import FoundationPile from "@/components/FoundationPile/FoundationPile";
 
 interface Foundations {
   hearts: Card[];
@@ -35,16 +39,10 @@ export default function SolitairePage() {
     spades: [],
   });
   const [stock, setStock] = useState<Card[]>([]);
-  const [waste, setWaste] = useState<Card[]>([]); // we'll track all waste, but only show top 3
+  const [waste, setWaste] = useState<Card[]>([]);
   const [score, setScore] = useState<number>(0);
   const [moves, setMoves] = useState<number>(0);
   const [time, setTime] = useState<number>(0);
-
-  // For "two-click" moves in tableau
-  // const [selected, setSelected] = useState<{
-  //   columnIndex: number;
-  //   cardIndex: number;
-  // } | null>(null);
 
   // ---------------------------
   // 2) ON MOUNT: NEW GAME, TIMER
@@ -71,7 +69,6 @@ export default function SolitairePage() {
     );
 
     setTableau(newTableau);
-    // The remainder of the deck is the stock (facedown)
     setStock(freshDeck.slice(dealtCardsCount));
     setWaste([]);
     setFoundations({ hearts: [], diamonds: [], clubs: [], spades: [] });
@@ -79,24 +76,17 @@ export default function SolitairePage() {
 
   // ---------------------------
   // 4) FLIP STOCK
-  //    One card per click. Show top 3 in waste.
   // ---------------------------
   function flipStockCard() {
     if (stock.length > 0) {
-      // Take only 1 card from stock
       const [nextCard, ...rest] = stock;
       nextCard.faceUp = true;
-
-      // Put it on top of waste
       const newWaste = [nextCard, ...waste];
-
       setStock(rest);
       setWaste(newWaste);
-
       setMoves((m) => m + 1);
-      setScore((s) => s - 5); // optional scoring
+      setScore((s) => s - 5);
     } else {
-      // If stock is empty, recycle waste -> stock (face down)
       if (waste.length > 0) {
         const recycled = waste.map((card) => {
           card.faceUp = false;
@@ -104,8 +94,6 @@ export default function SolitairePage() {
         });
         setStock(recycled);
         setWaste([]);
-        // Possibly track a pass or do a penalty
-        // setScore((s) => s - 20);
       }
     }
   }
@@ -128,7 +116,6 @@ export default function SolitairePage() {
           ...newFoundations[topCard.suit],
           topCard,
         ];
-        // flip next card if needed
         if (column.length > 0 && !column[column.length - 1].faceUp) {
           column[column.length - 1].faceUp = true;
         }
@@ -141,90 +128,79 @@ export default function SolitairePage() {
     setTableau(newTableau);
     setFoundations(newFoundations);
 
-    // Attempt again if at least one card moved
     if (moved) {
       setTimeout(autoMoveToFoundation, 200);
     }
+    checkWinCondition();
   }
 
   function canMoveToFoundation(card: Card): boolean {
     const suitStack = foundations[card.suit];
     if (suitStack.length === 0) {
-      return card.rank === 1; // must be Ace if empty
+      return card.rank === 1;
     }
     const topCard = suitStack[suitStack.length - 1];
     return card.rank === topCard.rank + 1;
   }
 
   // ---------------------------
-  // 6) TWO-CLICK METHOD: TABLEAU MOVES
+  // 6) MOVING CARDS => TABLEAU
   // ---------------------------
-  // function handleCardClick(colIdx: number, cardIdx: number) {
-  //   const column = tableau[colIdx];
-  //   const clickedCard = column[cardIdx];
-  //   if (!clickedCard || !clickedCard.faceUp) return;
-
-  //   if (!selected) {
-  //     setSelected({ columnIndex: colIdx, cardIndex: cardIdx });
-  //   } else {
-  //     if (moveStack(selected.columnIndex, selected.cardIndex, colIdx)) {
-  //       setSelected(null);
-  //     } else {
-  //       setSelected(null);
-  //     }
-  //   }
-  // }
-
   function moveStack(
     fromCol: number,
     fromCardIdx: number,
     toCol: number
   ): boolean {
-    if (fromCol < 0 || fromCol >= tableau.length) return false;
-    if (toCol < 0 || toCol >= tableau.length) return false;
+    if (fromCol === toCol) return false;
 
-    const sourceColumn = [...tableau[fromCol]];
-    if (fromCardIdx < 0 || fromCardIdx >= sourceColumn.length) return false;
+    if (fromCol >= 0) {
+      const sourceColumn = [...tableau[fromCol]];
+      if (fromCardIdx < 0 || fromCardIdx >= sourceColumn.length) return false;
+      const movingStack = sourceColumn.slice(fromCardIdx);
+      if (movingStack.length === 0) return false;
+      const cardToMove = movingStack[0];
+      if (!cardToMove) return false;
+      const destColumn = [...tableau[toCol]];
+      if (!canPlaceOnTop(destColumn, cardToMove)) return false;
 
-    const movingStack = sourceColumn.slice(fromCardIdx);
-    if (movingStack.length === 0) return false;
-
-    const cardToMove = movingStack[0];
-    if (!cardToMove) return false;
-
-    const destColumn = [...tableau[toCol]];
-    if (!canPlaceOnTop(destColumn, cardToMove)) {
-      return false;
+      sourceColumn.splice(fromCardIdx, movingStack.length);
+      destColumn.push(...movingStack);
+      if (
+        sourceColumn.length > 0 &&
+        !sourceColumn[sourceColumn.length - 1].faceUp
+      ) {
+        sourceColumn[sourceColumn.length - 1].faceUp = true;
+      }
+      const newTableau = [...tableau];
+      newTableau[fromCol] = sourceColumn;
+      newTableau[toCol] = destColumn;
+      setTableau(newTableau);
+      setMoves((m) => m + 1);
+      setScore((s) => s + 1);
+      return true;
+    } else if (fromCol === -1) {
+      const wasteCopy = [...waste];
+      if (wasteCopy.length === 0) return false;
+      const cardToMove = wasteCopy[0];
+      wasteCopy.shift();
+      setWaste(wasteCopy);
+      const newTableau = [...tableau];
+      if (toCol < 0 || toCol >= newTableau.length) return false;
+      const destColumn = [...newTableau[toCol]];
+      if (!canPlaceOnTop(destColumn, cardToMove)) return false;
+      destColumn.push(cardToMove);
+      newTableau[toCol] = destColumn;
+      setTableau(newTableau);
+      setMoves((m) => m + 1);
+      setScore((s) => s + 1);
+      return true;
     }
-
-    sourceColumn.splice(fromCardIdx, movingStack.length);
-    destColumn.push(...movingStack);
-
-    // flip next card if needed
-    if (
-      sourceColumn.length > 0 &&
-      !sourceColumn[sourceColumn.length - 1].faceUp
-    ) {
-      sourceColumn[sourceColumn.length - 1].faceUp = true;
-    }
-
-    const newTableau = [...tableau];
-    newTableau[fromCol] = sourceColumn;
-    newTableau[toCol] = destColumn;
-    setTableau(newTableau);
-
-    setMoves((m) => m + 1);
-    setScore((s) => s + 1);
-
-    return true;
+    return false;
   }
 
   function canPlaceOnTop(destColumn: Card[], card: Card) {
     if (!card) return false;
-    if (destColumn.length === 0) {
-      // only King if empty
-      return card.rank === 13;
-    }
+    if (destColumn.length === 0) return card.rank === 13;
     const topCard = destColumn[destColumn.length - 1];
     const topIsRed = topCard.suit === "hearts" || topCard.suit === "diamonds";
     const movingIsRed = card.suit === "hearts" || card.suit === "diamonds";
@@ -235,12 +211,107 @@ export default function SolitairePage() {
   }
 
   // ---------------------------
-  // 7) RENDER
+  // 7) MOVING CARDS => FOUNDATIONS
+  // ---------------------------
+  function moveToFoundation(
+    fromCol: number,
+    fromCardIdx: number,
+    suit: keyof Foundations
+  ): boolean {
+    let cardToMove: Card | undefined;
+
+    if (fromCol >= 0) {
+      const sourceColumn = [...tableau[fromCol]];
+      if (fromCardIdx < 0 || fromCardIdx >= sourceColumn.length) return false;
+      const movingStack = sourceColumn.slice(fromCardIdx);
+      if (movingStack.length === 0) return false;
+      cardToMove = movingStack[0];
+      sourceColumn.splice(fromCardIdx, movingStack.length);
+      if (
+        sourceColumn.length > 0 &&
+        !sourceColumn[sourceColumn.length - 1].faceUp
+      ) {
+        sourceColumn[sourceColumn.length - 1].faceUp = true;
+      }
+      const newTableau = [...tableau];
+      newTableau[fromCol] = sourceColumn;
+      setTableau(newTableau);
+    } else if (fromCol === -1) {
+      const wasteCopy = [...waste];
+      if (wasteCopy.length === 0) return false;
+      cardToMove = wasteCopy[0];
+      wasteCopy.shift();
+      setWaste(wasteCopy);
+    }
+
+    if (!cardToMove) return false;
+    if (!canPlaceOnFoundationSuit(suit, cardToMove)) return false;
+
+    const newFoundations = { ...foundations };
+    newFoundations[suit] = [...newFoundations[suit], cardToMove];
+    setFoundations(newFoundations);
+
+    setMoves((m) => m + 1);
+    setScore((s) => s + 10);
+
+    checkWinCondition();
+    return true;
+  }
+
+  function canPlaceOnFoundationSuit(
+    suit: keyof Foundations,
+    card: Card
+  ): boolean {
+    if (card.suit !== suit) return false;
+    const pile = foundations[suit];
+    if (pile.length === 0) {
+      return card.rank === 1;
+    }
+    const topCard = pile[pile.length - 1];
+    return card.rank === topCard.rank + 1;
+  }
+
+  // ---------------------------
+  // 8) CHECK WIN CONDITION
+  // ---------------------------
+  function checkWinCondition() {
+    const totalInFoundations =
+      foundations.hearts.length +
+      foundations.diamonds.length +
+      foundations.clubs.length +
+      foundations.spades.length;
+
+    if (totalInFoundations === 52) {
+      alert("Congratulations! You've completed the game!");
+      startNewGame();
+    }
+  }
+
+  // ---------------------------
+  // 9) DOUBLE-CLICK FUNCTIONALITY
+  // ---------------------------
+function handleDoubleClickCard(fromCol: number, fromCardIdx: number) {
+  let card: Card | undefined;
+  if (fromCol >= 0) {
+    const column = tableau[fromCol];
+    card = column[fromCardIdx];
+  } else if (fromCol === -1) {
+    card = waste[0];
+  }
+  if (!card || !card.faceUp) return;
+
+  if (canPlaceOnFoundationSuit(card.suit as keyof Foundations, card)) {
+    moveToFoundation(fromCol, fromCardIdx, card.suit as keyof Foundations);
+  }
+}
+
+  // ---------------------------
+  // 10) RENDER
   // ---------------------------
   return (
     <DndProvider backend={HTML5Backend}>
       <main style={{ padding: "1rem" }}>
-        <h1>Klondike Solitaire (1-Card Flip, Show Top 3 in Waste)</h1>
+        <h1>Klondike Solitaire - Double Click & Drag</h1>
         <div style={{ marginBottom: "0.5rem" }}>
           Score: {score} | Moves: {moves} | Time: {time}s
         </div>
@@ -255,36 +326,23 @@ export default function SolitairePage() {
               moveStack={moveStack}
               canPlaceOnTop={canPlaceOnTop}
               tableau={tableau}
+              onDoubleClickCard={handleDoubleClickCard} // Pass the double-click handler
             />
           ))}
         </section>
 
         {/* FOUNDATIONS */}
         <section style={{ display: "flex", gap: "2rem", marginBottom: "1rem" }}>
-          {Object.entries(foundations).map(([suit, cards]) => {
-            const topCard = cards[cards.length - 1];
-            return (
-              <div key={suit}>
-                <h3>{suit[0].toUpperCase() + suit.slice(1)}</h3>
-                {topCard ? (
-                  <CardView card={topCard} width={80} height={120} />
-                ) : (
-                  <div
-                    style={{
-                      width: "80px",
-                      height: "120px",
-                      border: "1px dashed #999",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    Empty
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {Object.entries(foundations).map(([foundationSuit, cards]) => (
+            <FoundationPile
+              key={foundationSuit}
+              suit={foundationSuit as keyof Foundations}
+              cards={cards}
+              isOverGlobal={() => {}}
+              canPlaceOnFoundation={canPlaceOnFoundationSuit}
+              moveToFoundation={moveToFoundation}
+            />
+          ))}
         </section>
 
         {/* STOCK & WASTE */}
@@ -294,7 +352,6 @@ export default function SolitairePage() {
             {/* STOCK */}
             <div>
               <h3>Stock ({stock.length})</h3>
-              {/* purely cosmetic facedown card if stock > 0 */}
               {stock.length > 0 ? (
                 <CardView
                   card={{ ...stock[0], faceUp: false }}
@@ -315,27 +372,15 @@ export default function SolitairePage() {
             {/* WASTE */}
             <div>
               <h3>Waste</h3>
-              {/* Show only the top 3 cards of waste. 
-                The newest card is at waste[0], the next at waste[1], etc.
-                We'll slice the array to the first 3 items. 
-                The user sees up to 3, the rest are "hidden." 
-            */}
-              {waste.slice(0, 3).map((card, i) => {
-                // i=0 is the newest, i=1 is older, i=2 is oldest of the visible group
-                // We'll offset them so the newest is separate, older ones behind it
-                return (
-                  <div
-                    key={card.id}
-                    style={{
-                      marginLeft: i === 0 ? "0px" : "-50px",
-                      display: "inline-block",
-                      zIndex: 3 - i, // top card = highest zIndex
-                    }}
-                  >
-                    <CardView card={card} width={80} height={120} />
-                  </div>
-                );
-              })}
+              {waste.slice(0, 1).map((card) => (
+                <div
+                  key={card.id}
+                  style={{ display: "inline-block" }}
+                  onDoubleClick={() => handleDoubleClickCard(-1, 0)}
+                >
+                  <DraggableCard card={card} columnIndex={-1} cardIndex={0} />
+                </div>
+              ))}
             </div>
           </div>
         </section>

@@ -1,8 +1,9 @@
-// DropColumn.tsx (or .gtsx)
+"use client";
+
 import React from "react";
 import { useDrop } from "react-dnd";
-import DraggableCard from "../DraggableCard/DraggableCard";
-import { Card } from "../../lib/deck";
+import DraggableCard from "@/components/DraggableCard/DraggableCard";
+import { Card } from "@/lib/deck";
 
 interface DropColumnProps {
   colIndex: number;
@@ -10,6 +11,14 @@ interface DropColumnProps {
   moveStack: (fromCol: number, fromCardIdx: number, toCol: number) => boolean;
   canPlaceOnTop: (destColumn: Card[], card: Card) => boolean;
   tableau: Card[][];
+  onDoubleClickCard: (fromCol: number, fromCardIdx: number) => void;
+}
+
+interface DragItem {
+  fromCol: number;
+  fromIndex: number;
+  card: Card;
+  type: string;
 }
 
 export default function DropColumn({
@@ -18,13 +27,9 @@ export default function DropColumn({
   moveStack,
   canPlaceOnTop,
   tableau,
+  onDoubleClickCard,
 }: DropColumnProps) {
-  const [{ isOver }, drop] = useDrop<
-    // item type
-    { fromCol: number; fromIndex: number; card: Card },
-    void, // drop result
-    { isOver: boolean }
-  >({
+  const [{ isOver }, dropRef] = useDrop<DragItem, void, { isOver: boolean }>({
     accept: "CARD",
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -34,16 +39,14 @@ export default function DropColumn({
       moveStack(fromCol, fromIndex, colIndex);
     },
     canDrop: (item) => {
-      const { card } = item;
       const destColumn = tableau[colIndex];
-      return canPlaceOnTop(destColumn, card);
+      return canPlaceOnTop(destColumn, item.card);
     },
   });
 
   return (
     <div
-      // Type assertion: tell TS that `drop` can be used as a ref
-      ref={drop as unknown as React.Ref<HTMLDivElement>}
+      ref={dropRef as unknown as React.Ref<HTMLDivElement>}
       style={{
         border: "1px solid #ccc",
         padding: "0.5rem",
@@ -53,8 +56,31 @@ export default function DropColumn({
     >
       <h3>Column {colIndex + 1}</h3>
       {columnCards.map((card, idx) => (
-        <div key={card.id} style={{ marginBottom: "-70px" }}>
-          <DraggableCard card={card} columnIndex={colIndex} cardIndex={idx} />
+        <div
+          key={card.id}
+          style={{ marginBottom: "-70px" }}
+          onDoubleClick={() => onDoubleClickCard(colIndex, idx)}
+        >
+          {card.faceUp ? (
+            <DraggableCard card={card} columnIndex={colIndex} cardIndex={idx} />
+          ) : (
+            <div
+              style={{
+                width: "80px",
+                height: "120px",
+                backgroundColor: "#444",
+                border: "1px solid #999",
+                borderRadius: "6px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                fontWeight: "bold",
+              }}
+            >
+              Face Down
+            </div>
+          )}
         </div>
       ))}
     </div>
