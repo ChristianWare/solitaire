@@ -1,0 +1,46 @@
+.cardContainer {
+  width: 80px;
+  height: 120px;
+  border: 1px solid #999;
+  border-radius: 8px;
+  font-family: sans-serif;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.faceDown {
+  background-color: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.faceUp {
+  background-color: white;
+}
+
+.topLeft {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  font-size: 12px;
+}
+
+.bottomRight {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  font-size: 12px;
+  transform: rotate(180deg);
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+}
