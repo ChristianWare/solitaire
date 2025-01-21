@@ -66,7 +66,6 @@ export default function DropColumn({
           ) : (
             <div
               style={{
-                width: "80px",
                 height: "120px",
                 backgroundColor: "#444",
                 border: "1px solid #999",

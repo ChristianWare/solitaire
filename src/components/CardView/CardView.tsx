@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "./CardView.module.css";
 import React from "react";
 import { Card } from "@/lib/deck";
 
@@ -37,30 +38,25 @@ function getSuitColor(suit: string): string {
 
 interface CardViewProps {
   card: Card;
-  width?: number;
-  height?: number;
+  // width?: number;
+  // height?: number;
 }
 
-export default function CardView({
-  card,
-  width = 80,
-  height = 120,
-}: CardViewProps) {
+export default function CardView({ card }: CardViewProps) {
   if (!card.faceUp) {
     return (
       <div
-        style={{
-          width: `${width}px`,
-          height: `${height}px`,
-          backgroundColor: "#444",
-          border: "1px solid #999",
-          borderRadius: "6px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontWeight: "bold",
-        }}
+        className={styles.faceDownCardContainer}
+        // style={{
+        //   backgroundColor: "#444",
+        //   border: "1px solid #999",
+        //   borderRadius: "6px",
+        //   display: "flex",
+        //   alignItems: "center",
+        //   justifyContent: "center",
+        //   color: "white",
+        //   fontWeight: "bold",
+        // }}
       >
         {/* Face Down */}
       </div>
@@ -73,59 +69,50 @@ export default function CardView({
 
   return (
     <div
+      className={styles.faceUpCardContainer}
       style={{
-        width: `${width}px`,
-        height: `${height}px`,
-        backgroundColor: "white",
-        border: "1px solid #999",
-        borderRadius: "6px",
-        position: "relative",
         color: suitColor,
-        fontFamily: "sans-serif",
       }}
     >
-      {/* Top-left corner */}
-      <div
-        style={{
-          position: "absolute",
-          top: "4px",
-          left: "4px",
-          fontSize: "0.8rem",
-          lineHeight: "1.1rem",
-        }}
-      >
-        {rankStr}
-        <br />
-        {suitSym}
+      <div className={styles.rankStrSuitSymContainer}>
+        <span
+          className={styles.rankStr}
+          style={{
+            color: suitColor,
+          }}
+        >
+          {rankStr}
+        </span>
+        <span
+          className={styles.suitSymSmall}
+          style={{
+            color: suitColor,
+          }}
+        >
+          {suitSym}
+        </span>
       </div>
 
       {/* Center suit symbol */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          fontSize: "1.4rem",
-        }}
-      >
-        {suitSym}
-      </div>
+      <div className={styles.suitSymLarge}>{suitSym}</div>
 
-      {/* Bottom-right corner (rotated 180°) */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "4px",
-          right: "4px",
-          fontSize: "0.8rem",
-          lineHeight: "1.1rem",
-          transform: "rotate(180deg)",
-        }}
-      >
-        {rankStr}
-        <br />
-        {suitSym}
+      <div className={styles.rankStrSuitSymContainer2}>
+        <span
+          className={styles.rankStr2}
+          style={{
+            color: suitColor,
+          }}
+        >
+          {rankStr}
+        </span>
+        <span
+          className={styles.suitSymSmall2}
+          style={{
+            color: suitColor,
+          }}
+        >
+          {suitSym}
+        </span>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 .cardContainer {
-  width: 80px;
+  width: 100%;
   height: 120px;
   border: 1px solid #999;
   border-radius: 8px;
@@ -9,6 +9,64 @@
   user-select: none;
 }
 
+.faceDownCardContainer {
+  background-color: red;
+}
+
+.faceUpCardContainer {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  border: 1px solid var(--gray);
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: var(--white);
+}
+
+.rankStrSuitSymContainer,
+.rankStrSuitSymContainer2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.rankStr,
+.rankStr2 .suitSymSmall,
+.suitSymSmall2 {
+  display: block;
+  /* font-size: 3rem; */
+}
+
+.rankStr,
+.rankStr2 {
+  font-size: 4rem;
+  font-weight: 600;
+  /* -webkit-text-stroke: 1px var(--black); */
+  /* -webkit-text-fill-color: var(--yellow); */
+}
+
+.suitSymSmall,
+.suitSymSmall2 {
+  font-size: 2rem;
+}
+
+.suitSymLarge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: "translate(-50%, -50%)";
+  font-size: 3rem;
+}
+
+.rankStrSuitSymContainer2 {
+  position: absolute;
+  bottom: 4px;
+  right: 7px;
+  transform: rotate(180deg);
+}
+
+/* 
 .faceDown {
   background-color: #444;
   display: flex;
@@ -43,4 +101,4 @@
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 24px;
-}
+} */

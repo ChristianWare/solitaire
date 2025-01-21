@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter_Tight } from "next/font/google";
+import { Inter_Tight, Anton } from "next/font/google";
 import localFont from "next/font/local";
 
 import "./globals.css";
@@ -10,9 +10,21 @@ const InterTight = Inter_Tight({
   subsets: ["latin"],
 });
 
-const BoogyBrutPoster = localFont({
-  src: "../../public/fonts/BoogyBrutPoster.woff2",
-  variable: "--BoogyBrutPoster",
+const anton = Anton({
+  variable: "--Anton",
+  weight: ["400"],
+  subsets: ["latin"],
+});
+
+const HelveticaNowDisplay = localFont({
+  src: "../../public/fonts/HelveticaNowDisplay.woff2",
+  variable: "--HelveticaNowDisplay",
+  display: "swap",
+});
+
+const FixtureCondensedSemiBold = localFont({
+  src: "../../public/fonts/FixtureCondensedSemiBold.woff2",
+  variable: "--FixtureCondensedSemiBold",
   display: "swap",
 });
 
@@ -29,7 +41,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${InterTight.variable} ${BoogyBrutPoster.variable}`}>
+      <body
+        className={`${InterTight.variable} ${HelveticaNowDisplay.variable} ${FixtureCondensedSemiBold.variable} ${anton.variable}`}
+      >
         {children}
       </body>
     </html>

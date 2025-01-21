@@ -37,7 +37,7 @@ export default function DraggableCard({
         cursor: card.faceUp ? "grab" : "default",
       }}
     >
-      <CardView card={card} width={80} height={120} />
+      <CardView card={card} />
     </div>
   );
 }

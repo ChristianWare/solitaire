@@ -1,15 +1,9 @@
 :root {
-  --black: #1e1738;
-  --blue: #162f35;
+  --black: #010103;
+  --yellow: #ffd85f;
+  --yellow2: #b9a047;
+  --gray: #cac8c6;
   --white: #ffffff;
-  --pink: #fcd2cd;
-  --purple: #bdb7d5;
-  --purple2: #7f62f3;
-  --gray: #787a7d;
-  --gray2: #f1f1f2;
-  --lightGray: #aab9c5;
-  --lightGray2: #6c6c83;
-  --grayText: #6C6F75;
 }
 
 * {
@@ -57,9 +51,10 @@ span {
 }
 
 h1 {
-  font-size: 5.6rem;
+  font-size: 10.4rem;
   line-height: 1.2em;
   font-weight: 600;
+  /* letter-spacing: -1px; */
 }
 
 h2 {
