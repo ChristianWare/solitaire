@@ -3,8 +3,8 @@
   grid-template-columns: repeat(7, 1fr);
   grid-gap: 1rem;
   width: 100%;
-  grid-template-areas: 
-    "found found found found . waste stock";
+  grid-template-areas: "found found found found . waste stock";
+  margin-bottom: 5rem;
 }
 
 /* Assign grid areas to wrapper divs */

@@ -96,22 +96,22 @@ export default function CardView({ card }: CardViewProps) {
       <div className={styles.suitSymLarge}>{suitSym}</div>
 
       <div className={styles.rankStrSuitSymContainer2}>
-        <span
+        {/* <span
           className={styles.rankStr2}
           style={{
             color: suitColor,
           }}
         >
           {rankStr}
-        </span>
-        <span
+        </span> */}
+        {/* <span
           className={styles.suitSymSmall2}
           style={{
             color: suitColor,
           }}
         >
           {suitSym}
-        </span>
+        </span> */}
       </div>
     </div>
   );

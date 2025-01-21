@@ -325,7 +325,7 @@ export default function SolitairePage() {
               <Waste waste={waste} onDoubleClickCard={handleDoubleClickCard} />
             </div>
             <div className={styles.stockArea}>
-              <Stock stock={stock} flipStockCard={flipStockCard} />
+              <Stock flipStockCard={flipStockCard} />
             </div>
           </div>
 
