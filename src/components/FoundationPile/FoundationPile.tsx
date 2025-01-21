@@ -61,8 +61,8 @@ export default function FoundationPile({
     <div
       ref={dropRef as unknown as React.Ref<HTMLDivElement>} // <--- Type assertion here
       style={{
-        width: "80px",
-        height: "120px",
+        width: "100%",
+        height: "260px",
         border: isOver ? "2px solid green" : "1px dashed #999",
         display: "flex",
         alignItems: "center",

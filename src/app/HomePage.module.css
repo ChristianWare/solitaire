@@ -1,13 +1,21 @@
 .top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 5rem;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 1rem;
+  width: 100%;
+  grid-template-areas: 
+    "found found found found . waste stock";
 }
 
-/* .seven {
-  display: grid;
-  grid-template-columns: repeat(1, 7fr);
-  grid-gap: 1rem;
-  background-color: red;
-} */
+/* Assign grid areas to wrapper divs */
+.foundationsArea {
+  grid-area: found;
+}
+
+.wasteArea {
+  grid-area: waste;
+}
+
+.stockArea {
+  grid-area: stock;
+}

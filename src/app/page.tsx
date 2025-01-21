@@ -314,17 +314,21 @@ export default function SolitairePage() {
         <main>
           <ScoreBoard score={score} moves={moves} time={time} />
           <div className={styles.top}>
-            <Foundations
-              foundations={foundations}
-              canPlaceOnFoundation={canPlaceOnFoundationSuit}
-              moveToFoundation={moveToFoundation}
-            />
+            <div className={styles.foundationsArea}>
+              <Foundations
+                foundations={foundations}
+                canPlaceOnFoundation={canPlaceOnFoundationSuit}
+                moveToFoundation={moveToFoundation}
+              />
+            </div>
+            <div className={styles.wasteArea}>
+              <Waste waste={waste} onDoubleClickCard={handleDoubleClickCard} />
+            </div>
+            <div className={styles.stockArea}>
+              <Stock stock={stock} flipStockCard={flipStockCard} />
+            </div>
           </div>
-          <div>
-            <Stock stock={stock} flipStockCard={flipStockCard} />
-            <div className={styles.seven}></div>
-          </div>
-          <Waste waste={waste} onDoubleClickCard={handleDoubleClickCard} />
+
           <Tableau
             tableau={tableau}
             moveStack={moveStack}
