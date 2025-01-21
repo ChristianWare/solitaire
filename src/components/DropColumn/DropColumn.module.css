@@ -1,14 +1,4 @@
 .faceDownCard {
-  /* background-color: var(--yellow);
-  padding: 1rem;
-   background-image: repeating-linear-gradient(
-    45deg,
-    var(--black),
-    var(--yellow) 1px,
-    transparent 0,
-    transparent 50%
-  );
-  background-size: 6px 6px; */
   background-color: var(--yellow);
   padding: 1rem;
   border: 2px solid var(--yellow2);

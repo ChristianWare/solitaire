@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import styles from './FoundationPile.module.css'
 import { useDrop } from "react-dnd";
 import CardView from "@/components/CardView/CardView";
 import { Card } from "@/lib/deck";
+import { useEffect } from 'react';
 
 interface DragItem {
   fromCol: number;
@@ -53,7 +54,7 @@ export default function FoundationPile({
     },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     isOverGlobal(isOver);
   }, [isOver, isOverGlobal]);
 
@@ -63,27 +64,20 @@ export default function FoundationPile({
       style={{
         width: "100%",
         height: "260px",
-        border: isOver ? "2px solid green" : "1px dashed #999",
+        border: isOver ? "2px solid green" : "",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
       }}
     >
-      <h3
-        style={{
-          position: "absolute",
-          top: "-1.5rem",
-          left: 0,
-          fontSize: "1rem",
-        }}
-      >
-        {suit[0].toUpperCase() + suit.slice(1)}
-      </h3>
+      
       {topCard ? (
         <CardView card={topCard} />
       ) : (
-        <div style={{ fontSize: "0.8rem" }}>Empty</div>
+        <div className={styles.empty}>
+          A
+        </div>
       )}
     </div>
   );
