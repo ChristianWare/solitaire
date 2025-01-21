@@ -1,7 +1,6 @@
 "use client";
 
 import styles from "./CardView.module.css";
-import React from "react";
 import { Card } from "@/lib/deck";
 
 function rankToShortString(rank: number): string {

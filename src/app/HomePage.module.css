@@ -1,0 +1,13 @@
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 5rem;
+}
+
+/* .seven {
+  display: grid;
+  grid-template-columns: repeat(1, 7fr);
+  grid-gap: 1rem;
+  background-color: red;
+} */

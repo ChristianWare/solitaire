@@ -81,7 +81,7 @@ export default function FoundationPile({
         {suit[0].toUpperCase() + suit.slice(1)}
       </h3>
       {topCard ? (
-        <CardView card={topCard} width={80} height={120} />
+        <CardView card={topCard} />
       ) : (
         <div style={{ fontSize: "0.8rem" }}>Empty</div>
       )}

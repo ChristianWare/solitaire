@@ -1,0 +1,9 @@
+.container {
+    margin-bottom: 2rem;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}

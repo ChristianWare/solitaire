@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import styles from "./Tableau.module.css";
 import DropColumn from "@/components/DropColumn/DropColumn";
 import { Card } from "@/lib/deck";
 
@@ -11,13 +11,12 @@ interface TableauProps {
   onDoubleClickCard: (fromCol: number, fromCardIdx: number) => void;
 }
 
-
-import styles from './Tableau.module.css'
-
-export default function Tableau({ tableau,
+export default function Tableau({
+  tableau,
   moveStack,
   canPlaceOnTop,
-  onDoubleClickCard, }: TableauProps) {
+  onDoubleClickCard,
+}: TableauProps) {
   return (
     <section className={styles.container}>
       {tableau.map((column, colIdx) => (

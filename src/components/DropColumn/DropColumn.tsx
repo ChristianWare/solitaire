@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import styles from "./DropColumn.module.css";
 import { useDrop } from "react-dnd";
 import DraggableCard from "@/components/DraggableCard/DraggableCard";
 import { Card } from "@/lib/deck";
@@ -46,29 +46,30 @@ export default function DropColumn({
 
   return (
     <div
+      className={styles.container}
       ref={dropRef as unknown as React.Ref<HTMLDivElement>}
       style={{
-        border: "1px solid #ccc",
-        padding: "0.5rem",
+        // border: "1px solid #ccc",
+        // padding: "0.5rem",
         backgroundColor: isOver ? "#afa" : "white",
-        minHeight: "200px",
+        // minHeight: "200px",
       }}
     >
-      <h3>Column {colIndex + 1}</h3>
       {columnCards.map((card, idx) => (
         <div
           key={card.id}
-          style={{ marginBottom: "-70px" }}
+          style={{ marginBottom: "-230px" }}
           onDoubleClick={() => onDoubleClickCard(colIndex, idx)}
         >
           {card.faceUp ? (
             <DraggableCard card={card} columnIndex={colIndex} cardIndex={idx} />
           ) : (
             <div
+            className={styles.faceDownCard}
               style={{
-                height: "120px",
-                backgroundColor: "#444",
-                border: "1px solid #999",
+                height: "260px",
+                // backgroundColor: "#444",
+                // border: "1px solid #999",
                 borderRadius: "6px",
                 display: "flex",
                 alignItems: "center",
@@ -77,7 +78,8 @@ export default function DropColumn({
                 fontWeight: "bold",
               }}
             >
-              Face Down
+              <div className={styles.pattern}></div>
+              
             </div>
           )}
         </div>

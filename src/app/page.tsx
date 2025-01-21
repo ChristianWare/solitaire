@@ -1,5 +1,6 @@
 "use client";
 
+import styles from "./HomePage.module.css";
 import { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -7,12 +8,12 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { Card, createDeck, shuffleDeck } from "@/lib/deck";
 import { dealTableau } from "@/lib/deal";
 
-import CardView from "@/components/CardView/CardView";
-// import DropColumn from "@/components/DropColumn/DropColumn";
-import DraggableCard from "@/components/DraggableCard/DraggableCard";
-import FoundationPile from "@/components/FoundationPile/FoundationPile";
 import Tableau from "@/components/Tableau/Tableau";
 import LayoutWrapper from "@/components/LayoutWrapper";
+import ScoreBoard from "@/components/ScoreBoard/ScoreBoard";
+import Foundations from "@/components/Foundations/Foundations";
+import Waste from "@/components/Waste/Waste";
+import Stock from "@/components/Stock/Stock";
 
 interface Foundations {
   hearts: Card[];
@@ -307,81 +308,29 @@ export default function SolitairePage() {
     }
   }
 
-  // ---------------------------
-  // 10) RENDER
-  // ---------------------------
   return (
     <DndProvider backend={HTML5Backend}>
       <LayoutWrapper>
-        <main style={{ padding: "1rem" }}>
-          {/* <h1>Klondike Solitaire - Double Click & Drag</h1> */}
-          <div style={{ marginBottom: "0.5rem" }}>
-            Score: {score} | Moves: {moves} | Time: {time}s
+        <main>
+          <ScoreBoard score={score} moves={moves} time={time} />
+          <div className={styles.top}>
+            <Foundations
+              foundations={foundations}
+              canPlaceOnFoundation={canPlaceOnFoundationSuit}
+              moveToFoundation={moveToFoundation}
+            />
           </div>
-
-          {/* TABLEAU */}
+          <div>
+            <Stock stock={stock} flipStockCard={flipStockCard} />
+            <div className={styles.seven}></div>
+          </div>
+          <Waste waste={waste} onDoubleClickCard={handleDoubleClickCard} />
           <Tableau
             tableau={tableau}
             moveStack={moveStack}
             canPlaceOnTop={canPlaceOnTop}
             onDoubleClickCard={handleDoubleClickCard}
           />
-
-          {/* FOUNDATIONS */}
-          <section
-            style={{ display: "flex", gap: "2rem", marginBottom: "1rem" }}
-          >
-            {Object.entries(foundations).map(([foundationSuit, cards]) => (
-              <FoundationPile
-                key={foundationSuit}
-                suit={foundationSuit as keyof Foundations}
-                cards={cards}
-                isOverGlobal={() => {}}
-                canPlaceOnFoundation={canPlaceOnFoundationSuit}
-                moveToFoundation={moveToFoundation}
-              />
-            ))}
-          </section>
-
-          {/* STOCK & WASTE */}
-          <section style={{ marginBottom: "1rem" }}>
-            <button onClick={flipStockCard}>Flip Stock</button>
-            <div style={{ marginTop: "1rem", display: "flex", gap: "1rem" }}>
-              {/* STOCK */}
-              <div>
-                <h3>Stock ({stock.length})</h3>
-                {stock.length > 0 ? (
-                  <CardView
-                    card={{ ...stock[0], faceUp: false }}
-                    width={80}
-                    height={120}
-                  />
-                ) : (
-                  <div
-                    style={{
-                      width: "80px",
-                      height: "120px",
-                      border: "1px dashed #999",
-                    }}
-                  />
-                )}
-              </div>
-
-              {/* WASTE */}
-              <div>
-                <h3>Waste</h3>
-                {waste.slice(0, 1).map((card) => (
-                  <div
-                    key={card.id}
-                    style={{ display: "inline-block" }}
-                    onDoubleClick={() => handleDoubleClickCard(-1, 0)}
-                  >
-                    <DraggableCard card={card} columnIndex={-1} cardIndex={0} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
 
           <button onClick={autoMoveToFoundation}>
             Auto Move to Foundation
