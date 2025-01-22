@@ -5,6 +5,10 @@ import { useDrop } from "react-dnd";
 import CardView from "@/components/CardView/CardView";
 import { Card } from "@/lib/deck";
 import { useEffect } from "react";
+import Heart from "../../../public/icons/heart.svg";
+import Diamond from "../../../public/icons/diamond.svg";
+import Spade from "../../../public/icons/spade.svg";
+import Club from "../../../public/icons/club.svg";
 
 interface DragItem {
   fromCol: number;
@@ -74,7 +78,20 @@ export default function FoundationPile({
       {topCard ? (
         <CardView card={topCard} />
       ) : (
-        <div className={styles.empty}>A</div>
+        <div className={styles.empty}>
+          {suit === "hearts" && (
+            <Heart width={50} height={50} style={{ opacity: "0.5" }} />
+          )}
+          {suit === "diamonds" && (
+            <Diamond width={50} height={50} style={{ opacity: "0.5" }} />
+          )}
+          {suit === "spades" && (
+            <Spade width={50} height={50} style={{ opacity: "0.5" }} />
+          )}
+          {suit === "clubs" && (
+            <Club width={50} height={50} style={{ opacity: "0.5" }} />
+          )}{" "}
+        </div>
       )}
     </div>
   );
