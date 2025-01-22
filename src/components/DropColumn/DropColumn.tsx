@@ -51,7 +51,7 @@ export default function DropColumn({
       style={{
         // border: "1px solid #ccc",
         // padding: "0.5rem",
-        backgroundColor: isOver ? "#afa" : "white",
+        backgroundColor: isOver ? "#afa" : "",
         minHeight: "200px",
       }}
     >
@@ -64,23 +64,7 @@ export default function DropColumn({
           {card.faceUp ? (
             <DraggableCard card={card} columnIndex={colIndex} cardIndex={idx} />
           ) : (
-            <div
-            className={styles.faceDownCard}
-              style={{
-                height: "260px",
-                // backgroundColor: "#444",
-                // border: "1px solid #999",
-                borderRadius: "6px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                fontWeight: "bold",
-              }}
-            >
-              <div className={styles.pattern}></div>
-              
-            </div>
+            <div className={styles.faceDownCard}></div>
           )}
         </div>
       ))}

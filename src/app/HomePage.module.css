@@ -1,3 +1,8 @@
+.gameBoard {
+  background-color: var(--tan);
+  padding-bottom: 30rem;
+}
+
 .top {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -7,7 +12,6 @@
   margin-bottom: 5rem;
 }
 
-/* Assign grid areas to wrapper divs */
 .foundationsArea {
   grid-area: found;
 }

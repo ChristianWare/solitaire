@@ -313,35 +313,40 @@ export default function SolitairePage() {
     <DndProvider backend={HTML5Backend}>
       <main>
         <Hero />
-        <LayoutWrapper>
-          <ScoreBoard score={score} moves={moves} time={time} />
-          <div className={styles.top}>
-            <div className={styles.foundationsArea}>
-              <Foundations
-                foundations={foundations}
-                canPlaceOnFoundation={canPlaceOnFoundationSuit}
-                moveToFoundation={moveToFoundation}
-              />
+        <section className={styles.gameBoard}>
+          <LayoutWrapper>
+            <ScoreBoard score={score} moves={moves} time={time} />
+            <div className={styles.top}>
+              <div className={styles.foundationsArea}>
+                <Foundations
+                  foundations={foundations}
+                  canPlaceOnFoundation={canPlaceOnFoundationSuit}
+                  moveToFoundation={moveToFoundation}
+                />
+              </div>
+              <div className={styles.wasteArea}>
+                <Waste
+                  waste={waste}
+                  onDoubleClickCard={handleDoubleClickCard}
+                />
+              </div>
+              <div className={styles.stockArea}>
+                <Stock flipStockCard={flipStockCard} />
+              </div>
             </div>
-            <div className={styles.wasteArea}>
-              <Waste waste={waste} onDoubleClickCard={handleDoubleClickCard} />
-            </div>
-            <div className={styles.stockArea}>
-              <Stock flipStockCard={flipStockCard} />
-            </div>
-          </div>
 
-          <Tableau
-            tableau={tableau}
-            moveStack={moveStack}
-            canPlaceOnTop={canPlaceOnTop}
-            onDoubleClickCard={handleDoubleClickCard}
-          />
+            <Tableau
+              tableau={tableau}
+              moveStack={moveStack}
+              canPlaceOnTop={canPlaceOnTop}
+              onDoubleClickCard={handleDoubleClickCard}
+            />
 
-          {/* <button onClick={autoMoveToFoundation}>
+            {/* <button onClick={autoMoveToFoundation}>
             Auto Move to Foundation
           </button> */}
-        </LayoutWrapper>
+          </LayoutWrapper>
+        </section>
       </main>
     </DndProvider>
   );
