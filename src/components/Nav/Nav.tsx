@@ -7,12 +7,10 @@ import Logo from "../Logo/Logo";
 
 const navItems = [
   { text: "How to play", href: "/#about" },
-  { text: "History", href: "/#projects" },
   { text: "Play Now", href: "/#resume" },
 ];
 
 const navItemsii = [
-  // { text: "email", href: "/#email" },
   {
     text: "Github",
     href: "https://github.com/ChristianWare",

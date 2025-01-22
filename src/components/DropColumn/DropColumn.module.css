@@ -4,4 +4,14 @@
   border: 1px solid var(--blue);
   height: 260px;
   border-radius: 8px;
+  background-color: var(--tan);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--tan),
+    var(--blue) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  border: 1px solid var(--blue);
+  background-size: 6px 6px;
 }

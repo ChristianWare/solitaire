@@ -17,6 +17,7 @@ import Hero from "@/components/Hero/Hero";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import Marquee from "@/components/Marquee/Marquee";
 import HowToPlay from "@/components/HowToPlay/HowToPlay";
+import Footer from "@/components/Footer/Footer";
 
 interface Foundations {
   hearts: Card[];
@@ -352,6 +353,7 @@ export default function SolitairePage() {
           </button> */}
           </LayoutWrapper>
         </section>
+        <Footer />
       </main>
     </DndProvider>
   );

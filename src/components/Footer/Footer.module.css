@@ -1,0 +1,60 @@
+.parent {
+  background-color: var(--tan);
+}
+
+.container {
+  border: 1px solid var(--blue);
+  border-radius: 15px;
+  background-color: var(--tan);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--blue),
+    var(--tan) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 6px 6px;
+  padding: 2rem;
+}
+
+.bottom {
+  background-color: var(--tan);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem;
+}
+
+.logoii {
+  color: var(--blue);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+}
+
+.disclosures {
+  text-decoration: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--blue);
+  font-size: 1.6rem;
+}
+
+.disc {
+  font-size: 1.6rem;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 568px) {
+  .bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
