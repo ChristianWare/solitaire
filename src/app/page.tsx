@@ -15,6 +15,7 @@ import Waste from "@/components/Waste/Waste";
 import Stock from "@/components/Stock/Stock";
 import Hero from "@/components/Hero/Hero";
 import LayoutWrapper from "@/components/LayoutWrapper";
+import Marquee from "@/components/Marquee/Marquee";
 
 interface Foundations {
   hearts: Card[];
@@ -313,6 +314,7 @@ export default function SolitairePage() {
     <DndProvider backend={HTML5Backend}>
       <main>
         <Hero />
+        <Marquee />
         <section className={styles.gameBoard}>
           <LayoutWrapper>
             <ScoreBoard score={score} moves={moves} time={time} />
