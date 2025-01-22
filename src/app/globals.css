@@ -1,9 +1,12 @@
 :root {
   --black: #010103;
-  --yellow: #ffd85f;
-  --yellow2: #b9a047;
+  --yellow: #257180;
+  --blue: #257180;
+  --yellow2: #257180;
   --gray: #cac8c6;
   --white: #ffffff;
+  --tan: #f2e5bf;
+  --red: #be3144;
 }
 
 * {
@@ -16,7 +19,7 @@
   scroll-margin-top: 40px;
   overscroll-behavior: none;
   -webkit-tap-highlight-color: transparent;
-  font-family: var(--InterTight);
+  font-family: var(--barlowCondensed);
 }
 
 html {
@@ -47,7 +50,7 @@ h5,
 h6,
 span {
   color: var(--black);
-  font-family: var(--InterTight);
+  font-family: var(--barlowCondensed);
 }
 
 h1 {

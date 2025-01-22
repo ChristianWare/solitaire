@@ -52,7 +52,7 @@ export default function DropColumn({
         // border: "1px solid #ccc",
         // padding: "0.5rem",
         backgroundColor: isOver ? "#afa" : "white",
-        // minHeight: "200px",
+        minHeight: "200px",
       }}
     >
       {columnCards.map((card, idx) => (

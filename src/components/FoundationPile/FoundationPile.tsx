@@ -1,10 +1,10 @@
 "use client";
 
-import styles from './FoundationPile.module.css'
+import styles from "./FoundationPile.module.css";
 import { useDrop } from "react-dnd";
 import CardView from "@/components/CardView/CardView";
 import { Card } from "@/lib/deck";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 interface DragItem {
   fromCol: number;
@@ -60,7 +60,7 @@ export default function FoundationPile({
 
   return (
     <div
-      ref={dropRef as unknown as React.Ref<HTMLDivElement>} // <--- Type assertion here
+      ref={dropRef as unknown as React.Ref<HTMLDivElement>}
       style={{
         width: "100%",
         height: "260px",
@@ -71,13 +71,10 @@ export default function FoundationPile({
         position: "relative",
       }}
     >
-      
       {topCard ? (
         <CardView card={topCard} />
       ) : (
-        <div className={styles.empty}>
-          A
-        </div>
+        <div className={styles.empty}>A</div>
       )}
     </div>
   );

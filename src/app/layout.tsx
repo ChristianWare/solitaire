@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter_Tight, Anton } from "next/font/google";
+import { Inter_Tight, Anton, Barlow_Condensed } from "next/font/google";
 import localFont from "next/font/local";
 
 import "./globals.css";
@@ -28,6 +28,30 @@ const FixtureCondensedSemiBold = localFont({
   display: "swap",
 });
 
+const Furore = localFont({
+  src: "../../public/fonts/Furore.otf",
+  variable: "--Furore",
+  display: "swap",
+});
+
+const DashingRegular = localFont({
+  src: "../../public/fonts/DashingRegular.otf",
+  variable: "--DashingRegular",
+  display: "swap",
+});
+
+const HumaneMedium = localFont({
+  src: "../../public/fonts/HumaneMedium.otf",
+  variable: "--HumaneMedium",
+  display: "swap",
+});
+
+const barlowCondensed = Barlow_Condensed({
+  variable: "--barlowCondensed",
+  weight: ["500", "600", "700"],
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Christian Ware's Portfolio Website",
   description:
@@ -42,7 +66,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${InterTight.variable} ${HelveticaNowDisplay.variable} ${FixtureCondensedSemiBold.variable} ${anton.variable}`}
+        className={`${InterTight.variable} ${HelveticaNowDisplay.variable} ${FixtureCondensedSemiBold.variable} ${anton.variable} ${Furore.variable} ${DashingRegular.variable} ${HumaneMedium.variable} ${barlowCondensed.variable}`}
       >
         {children}
       </body>

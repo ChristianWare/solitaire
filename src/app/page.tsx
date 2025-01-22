@@ -9,11 +9,12 @@ import { Card, createDeck, shuffleDeck } from "@/lib/deck";
 import { dealTableau } from "@/lib/deal";
 
 import Tableau from "@/components/Tableau/Tableau";
-import LayoutWrapper from "@/components/LayoutWrapper";
 import ScoreBoard from "@/components/ScoreBoard/ScoreBoard";
 import Foundations from "@/components/Foundations/Foundations";
 import Waste from "@/components/Waste/Waste";
 import Stock from "@/components/Stock/Stock";
+import Hero from "@/components/Hero/Hero";
+import LayoutWrapper from "@/components/LayoutWrapper";
 
 interface Foundations {
   hearts: Card[];
@@ -104,47 +105,47 @@ export default function SolitairePage() {
   // ---------------------------
   // 5) AUTO-MOVE TO FOUNDATIONS
   // ---------------------------
-  function autoMoveToFoundation() {
-    let moved = false;
-    const newTableau = [...tableau];
-    const newFoundations = { ...foundations };
+  // function autoMoveToFoundation() {
+  //   let moved = false;
+  //   const newTableau = [...tableau];
+  //   const newFoundations = { ...foundations };
 
-    for (let colIdx = 0; colIdx < newTableau.length; colIdx++) {
-      const column = newTableau[colIdx];
-      if (column.length === 0) continue;
-      const topCard = column[column.length - 1];
-      if (canMoveToFoundation(topCard)) {
-        column.pop();
-        newFoundations[topCard.suit] = [
-          ...newFoundations[topCard.suit],
-          topCard,
-        ];
-        if (column.length > 0 && !column[column.length - 1].faceUp) {
-          column[column.length - 1].faceUp = true;
-        }
-        moved = true;
-        setScore((s) => s + 10);
-        setMoves((m) => m + 1);
-      }
-    }
+  //   for (let colIdx = 0; colIdx < newTableau.length; colIdx++) {
+  //     const column = newTableau[colIdx];
+  //     if (column.length === 0) continue;
+  //     const topCard = column[column.length - 1];
+  //     if (canMoveToFoundation(topCard)) {
+  //       column.pop();
+  //       newFoundations[topCard.suit] = [
+  //         ...newFoundations[topCard.suit],
+  //         topCard,
+  //       ];
+  //       if (column.length > 0 && !column[column.length - 1].faceUp) {
+  //         column[column.length - 1].faceUp = true;
+  //       }
+  //       moved = true;
+  //       setScore((s) => s + 10);
+  //       setMoves((m) => m + 1);
+  //     }
+  //   }
 
-    setTableau(newTableau);
-    setFoundations(newFoundations);
+  //   setTableau(newTableau);
+  //   setFoundations(newFoundations);
 
-    if (moved) {
-      setTimeout(autoMoveToFoundation, 200);
-    }
-    checkWinCondition();
-  }
+  //   if (moved) {
+  //     setTimeout(autoMoveToFoundation, 200);
+  //   }
+  //   checkWinCondition();
+  // }
 
-  function canMoveToFoundation(card: Card): boolean {
-    const suitStack = foundations[card.suit];
-    if (suitStack.length === 0) {
-      return card.rank === 1;
-    }
-    const topCard = suitStack[suitStack.length - 1];
-    return card.rank === topCard.rank + 1;
-  }
+  // function canMoveToFoundation(card: Card): boolean {
+  //   const suitStack = foundations[card.suit];
+  //   if (suitStack.length === 0) {
+  //     return card.rank === 1;
+  //   }
+  //   const topCard = suitStack[suitStack.length - 1];
+  //   return card.rank === topCard.rank + 1;
+  // }
 
   // ---------------------------
   // 6) MOVING CARDS => TABLEAU
@@ -310,8 +311,9 @@ export default function SolitairePage() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <LayoutWrapper>
-        <main>
+      <main>
+        <Hero />
+        <LayoutWrapper>
           <ScoreBoard score={score} moves={moves} time={time} />
           <div className={styles.top}>
             <div className={styles.foundationsArea}>
@@ -336,11 +338,11 @@ export default function SolitairePage() {
             onDoubleClickCard={handleDoubleClickCard}
           />
 
-          <button onClick={autoMoveToFoundation}>
+          {/* <button onClick={autoMoveToFoundation}>
             Auto Move to Foundation
-          </button>
-        </main>
-      </LayoutWrapper>
+          </button> */}
+        </LayoutWrapper>
+      </main>
     </DndProvider>
   );
 }
