@@ -1,0 +1,146 @@
+.container {
+  background-color: var(--blue);
+  padding-top: 5rem;
+}
+
+.content {
+  padding-bottom: 5rem;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5rem;
+  margin-bottom: 5rem;
+}
+
+.topHeading {
+  color: var(--tan);
+  line-height: 100%;
+  font-family: var(--staatliches);
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.topHeading::after {
+  position: absolute;
+  content: "How To Play";
+  text-transform: uppercase;
+  top: 6px;
+  left: 6px;
+  -webkit-text-stroke: 1.5px var(--tan);
+  -webkit-text-fill-color: transparent;
+}
+
+.top {
+  padding: 0rem;
+  border-bottom: 1px solid var(--bgColor);
+}
+
+.topLeft {
+  flex: 2;
+}
+
+.topRight {
+  flex: 1;
+}
+
+.heading {
+  font-size: 2rem;
+  line-height: 1.3em;
+  font-weight: 500;
+  color: var(--tan);
+}
+
+.bottom {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 2rem;
+  padding-top: 2rem;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-self: start;
+  gap: 1rem;
+  padding: 2rem;
+  border-radius: 10px;
+  background-color: var(--tan);
+}
+
+.index {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.feature {
+  color: var(--blue);
+  text-align: center;
+  width: 100%;
+}
+
+.desc {
+  color: var(--blue);
+  font-weight: 500;
+  text-align: center;
+}
+
+@media screen and (max-width: 1068px) {
+  .top {
+    flex-direction: column;
+  }
+
+  .heading {
+    width: 80%;
+  }
+
+  .bottom {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .top {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .topHeading {
+    text-align: center;
+  }
+
+  .topHeading::after {
+    -webkit-text-stroke: 1.5px var(--blue);
+    z-index: -1;
+  }
+
+  .heading {
+    width: 100%;
+  }
+
+  .bottom {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .topHeading {
+    font-size: 6rem;
+  }
+
+  .bottom {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

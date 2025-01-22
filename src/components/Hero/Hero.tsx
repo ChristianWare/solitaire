@@ -11,7 +11,7 @@ const Hero = () => {
         </div>
       </LayoutWrapper>
       <LayoutWrapper>
-        <div className={styles.copy}>Chris Ware&apos;s</div>
+        <div className={styles.copy}>klondike</div>
         <h1 className={styles.heading}>solitaire</h1>
       </LayoutWrapper>
     </section>

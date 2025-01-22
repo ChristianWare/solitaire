@@ -84,15 +84,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-.iconContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3rem;
-  width: 100%;
-  margin-top: 3rem;
-}
-
 @media screen and (max-width: 568px) {
   .heading {
     padding: 2rem;

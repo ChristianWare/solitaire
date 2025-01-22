@@ -1,5 +1,6 @@
 .gameBoard {
   background-color: var(--tan);
+  padding-top: 5rem;
   padding-bottom: 30rem;
 }
 

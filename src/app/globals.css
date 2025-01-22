@@ -50,20 +50,19 @@ h4,
 h5,
 h6,
 span {
-  color: var(--black);
   font-family: var(--barlowCondensed);
+  text-transform: uppercase;
 }
 
 h1 {
   font-size: 10.4rem;
   line-height: 1.2em;
   font-weight: 600;
-  /* letter-spacing: -1px; */
 }
 
 h2 {
-  font-size: 4rem;
-  font-weight: 500;
+  font-size: 7rem;
+  font-weight: 600;
   line-height: 1.2em;
 }
 
