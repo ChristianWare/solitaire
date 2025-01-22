@@ -85,13 +85,12 @@
   z-index: -2;
 }
 
-@media screen and (max-width: 968px) {
-  .container {
-    padding: 16rem 0rem;
-  }
-}
-
 @media screen and (max-width: 568px) {
+  .heading {
+    padding: 2rem;
+    padding-top: 1.5rem;
+  }
+  
   .heading::after {
     -webkit-text-stroke: 1.5px var(--tan);
     z-index: -999;

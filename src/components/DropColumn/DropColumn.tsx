@@ -58,7 +58,7 @@ export default function DropColumn({
       {columnCards.map((card, idx) => (
         <div
           key={card.id}
-          style={{ marginBottom: "-205px" }}
+          style={{ marginBottom: "-215px" }}
           onDoubleClick={() => onDoubleClickCard(colIndex, idx)}
         >
           {card.faceUp ? (
