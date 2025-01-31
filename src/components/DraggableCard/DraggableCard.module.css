@@ -1,0 +1,11 @@
+.draggableContainer {
+  transition: transform 0.1s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.draggableContainer:active {
+  transform: none !important;
+  cursor: grabbing;
+}
+

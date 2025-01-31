@@ -17,9 +17,12 @@ export default function Waste({ waste, onDoubleClickCard }: WasteProps) {
       <div></div>
       <div></div>
       <div>
-        {waste.slice(0, 1).map((card, index) => (
-          <div key={card.id} onDoubleClick={() => onDoubleClickCard(-1, index)}>
-            <DraggableCard card={card} columnIndex={-1} cardIndex={index} />
+        {waste.slice(0, 1).map((card) => (
+          <div
+            key={card.id}
+            onDoubleClick={() => onDoubleClickCard(-1, 0)} // Force index to 0
+          >
+            <DraggableCard card={card} columnIndex={-1} cardIndex={0} />
           </div>
         ))}
       </div>

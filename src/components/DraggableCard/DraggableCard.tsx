@@ -4,11 +4,12 @@ import React from "react";
 import { useDrag } from "react-dnd";
 import CardView from "@/components/CardView/CardView";
 import { Card } from "@/lib/deck";
+import styles from "./DraggableCard.module.css"; // Create this CSS module
 
 interface DraggableCardProps {
   card: Card;
-  columnIndex: number; // if -1 => from waste, else from a tableau col
-  cardIndex: number; // index in that column or waste
+  columnIndex: number;
+  cardIndex: number;
 }
 
 export default function DraggableCard({
@@ -16,7 +17,7 @@ export default function DraggableCard({
   columnIndex,
   cardIndex,
 }: DraggableCardProps) {
-  const [{ isDragging }, dragRef] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: "CARD",
     item: {
       fromCol: columnIndex,
@@ -27,13 +28,23 @@ export default function DraggableCard({
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
+    options: {
+      dropEffect: "move",
+    },
   }));
+
+  // Use a callback ref to connect the drag source
+  const dragRef = (node: HTMLDivElement | null) => {
+    drag(node);
+  };
 
   return (
     <div
-      ref={dragRef as unknown as React.Ref<HTMLDivElement>}
+      ref={dragRef} // Use the callback ref here
+      className={styles.draggableContainer}
       style={{
         opacity: isDragging ? 0.5 : 1,
+        transform: isDragging ? "none" : "translate(0, 0)",
         cursor: card.faceUp ? "grab" : "default",
       }}
     >

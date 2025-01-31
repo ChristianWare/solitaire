@@ -18,6 +18,7 @@ import LayoutWrapper from "@/components/LayoutWrapper";
 import Marquee from "@/components/Marquee/Marquee";
 import HowToPlay from "@/components/HowToPlay/HowToPlay";
 import Footer from "@/components/Footer/Footer";
+import { ReactLenis } from "@studio-freight/react-lenis";
 
 interface Foundations {
   hearts: Card[];
@@ -205,17 +206,18 @@ export default function SolitairePage() {
     return false;
   }
 
-  function canPlaceOnTop(destColumn: Card[], card: Card) {
-    if (!card) return false;
-    if (destColumn.length === 0) return card.rank === 13;
-    const topCard = destColumn[destColumn.length - 1];
-    const topIsRed = topCard.suit === "hearts" || topCard.suit === "diamonds";
-    const movingIsRed = card.suit === "hearts" || card.suit === "diamonds";
-    const differentColor =
-      (topIsRed && !movingIsRed) || (!topIsRed && movingIsRed);
-    const correctRank = card.rank === topCard.rank - 1;
-    return differentColor && correctRank;
+function canPlaceOnTop(destColumn: Card[], card: Card) {
+  if (destColumn.length === 0) {
+    return card.rank === 13; // Only Kings can be placed on empty columns
   }
+
+  const topCard = destColumn[destColumn.length - 1];
+  const differentColor =
+    (topCard.suit === "hearts" || topCard.suit === "diamonds") !==
+    (card.suit === "hearts" || card.suit === "diamonds");
+
+  return differentColor && card.rank === topCard.rank - 1;
+}
 
   // ---------------------------
   // 7) MOVING CARDS => FOUNDATIONS
@@ -299,62 +301,73 @@ export default function SolitairePage() {
   // ---------------------------
   function handleDoubleClickCard(fromCol: number, fromCardIdx: number) {
     let card: Card | undefined;
+
+    // Check if clicking from tableau and card is topmost
     if (fromCol >= 0) {
       const column = tableau[fromCol];
+      if (fromCardIdx !== column.length - 1) return; // Only top card can move
       card = column[fromCardIdx];
-    } else if (fromCol === -1) {
+    }
+    // Check if clicking from waste (only top card exists)
+    else if (fromCol === -1) {
+      if (fromCardIdx !== 0) return; // Waste only has one visible card
       card = waste[0];
     }
+
     if (!card || !card.faceUp) return;
 
-    if (canPlaceOnFoundationSuit(card.suit as keyof Foundations, card)) {
-      moveToFoundation(fromCol, fromCardIdx, card.suit as keyof Foundations);
+    // Check foundation placement and move
+    const targetSuit = card.suit as keyof Foundations;
+    if (canPlaceOnFoundationSuit(targetSuit, card)) {
+      moveToFoundation(fromCol, fromCardIdx, targetSuit);
     }
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <main>
-        <Hero />
-        <Marquee />
-        <HowToPlay />
-        <Marquee />
-        <section className={styles.gameBoard}>
-          <LayoutWrapper>
-            <ScoreBoard score={score} moves={moves} time={time} />
-            <div className={styles.top}>
-              <div className={styles.foundationsArea}>
-                <Foundations
-                  foundations={foundations}
-                  canPlaceOnFoundation={canPlaceOnFoundationSuit}
-                  moveToFoundation={moveToFoundation}
-                />
+    <ReactLenis root>
+      <DndProvider backend={HTML5Backend}>
+        <main>
+          <Hero />
+          <Marquee />
+          <HowToPlay />
+          <Marquee />
+          <section className={styles.gameBoard}>
+            <LayoutWrapper>
+              <ScoreBoard score={score} moves={moves} time={time} />
+              <div className={styles.top}>
+                <div className={styles.foundationsArea}>
+                  <Foundations
+                    foundations={foundations}
+                    canPlaceOnFoundation={canPlaceOnFoundationSuit}
+                    moveToFoundation={moveToFoundation}
+                  />
+                </div>
+                <div className={styles.wasteArea}>
+                  <Waste
+                    waste={waste}
+                    onDoubleClickCard={handleDoubleClickCard}
+                  />
+                </div>
+                <div className={styles.stockArea}>
+                  <Stock flipStockCard={flipStockCard} />
+                </div>
               </div>
-              <div className={styles.wasteArea}>
-                <Waste
-                  waste={waste}
-                  onDoubleClickCard={handleDoubleClickCard}
-                />
-              </div>
-              <div className={styles.stockArea}>
-                <Stock flipStockCard={flipStockCard} />
-              </div>
-            </div>
 
-            <Tableau
-              tableau={tableau}
-              moveStack={moveStack}
-              canPlaceOnTop={canPlaceOnTop}
-              onDoubleClickCard={handleDoubleClickCard}
-            />
+              <Tableau
+                tableau={tableau}
+                moveStack={moveStack}
+                canPlaceOnTop={canPlaceOnTop}
+                onDoubleClickCard={handleDoubleClickCard}
+              />
 
-            {/* <button onClick={autoMoveToFoundation}>
+              {/* <button onClick={autoMoveToFoundation}>
             Auto Move to Foundation
           </button> */}
-          </LayoutWrapper>
-        </section>
-        <Footer />
-      </main>
-    </DndProvider>
+            </LayoutWrapper>
+          </section>
+          <Footer />
+        </main>
+      </DndProvider>
+    </ReactLenis>
   );
 }

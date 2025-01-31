@@ -4,6 +4,7 @@ import styles from "./DropColumn.module.css";
 import { useDrop } from "react-dnd";
 import DraggableCard from "@/components/DraggableCard/DraggableCard";
 import { Card } from "@/lib/deck";
+import { useEffect, useRef } from "react";
 
 interface DropColumnProps {
   colIndex: number;
@@ -29,14 +30,19 @@ export default function DropColumn({
   tableau,
   onDoubleClickCard,
 }: DropColumnProps) {
-  const [{ isOver }, dropRef] = useDrop<DragItem, void, { isOver: boolean }>({
+  const dropRef = useRef<HTMLDivElement>(null);
+
+  const [{ isOver }, drop] = useDrop<DragItem, void, { isOver: boolean }>({
     accept: "CARD",
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
     drop: (item) => {
       const { fromCol, fromIndex } = item;
-      moveStack(fromCol, fromIndex, colIndex);
+      if (fromCol !== colIndex) {
+        // Prevent self-drops
+        moveStack(fromCol, fromIndex, colIndex);
+      }
     },
     canDrop: (item) => {
       const destColumn = tableau[colIndex];
@@ -44,20 +50,23 @@ export default function DropColumn({
     },
   });
 
+  useEffect(() => {
+    drop(dropRef);
+  }, [drop]);
+
   return (
     <div
       className={styles.container}
-      ref={dropRef as unknown as React.Ref<HTMLDivElement>}
+      ref={dropRef}
       style={{
-        // border: "1px solid #ccc",
-        // padding: "0.5rem",
-        backgroundColor: isOver ? "#afa" : "",
-        minHeight: "200px",
+        backgroundColor: isOver ? "rgba(175, 255, 175, 0.3)" : "",
+        minHeight: "775px",
       }}
     >
       {columnCards.map((card, idx) => (
         <div
           key={card.id}
+          className={styles.cardWrapper}
           style={{ marginBottom: "-215px" }}
           onDoubleClick={() => onDoubleClickCard(colIndex, idx)}
         >
