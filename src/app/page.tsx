@@ -51,6 +51,16 @@ export default function SolitairePage() {
   const [score, setScore] = useState<number>(0);
   const [moves, setMoves] = useState<number>(0);
   const [time, setTime] = useState<number>(0);
+  const [history, setHistory] = useState<
+    {
+      tableau: Card[][];
+      foundations: Foundations;
+      stock: Card[];
+      waste: Card[];
+      score: number;
+      moves: number;
+    }[]
+  >([]);
 
   // ---------------------------
   // 2) ON MOUNT: NEW GAME, TIMER
@@ -337,16 +347,7 @@ function canPlaceOnTop(destColumn: Card[], card: Card) {
     }
   }
 
-  const [history, setHistory] = useState<
-    {
-      tableau: Card[][];
-      foundations: Foundations;
-      stock: Card[];
-      waste: Card[];
-      score: number;
-      moves: number;
-    }[]
-  >([]);
+  
 
   function undoMove() {
     if (history.length === 0) return; // No moves to undo
@@ -382,7 +383,8 @@ function canPlaceOnTop(destColumn: Card[], card: Card) {
                 time={time}
                 onNewGame={startNewGame}
                 onUndo={undoMove}
-              />{" "}
+                canUndo={history.length > 0} // Add this prop
+              />
               <div className={styles.top}>
                 <div className={styles.foundationsArea}>
                   <Foundations

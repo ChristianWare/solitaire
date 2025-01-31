@@ -6,6 +6,7 @@ interface ScoreBoardProps {
   time: number;
   onNewGame: () => void;
   onUndo: () => void;
+  canUndo: boolean; // Add this prop
 }
 
 export default function ScoreBoard({
@@ -14,13 +15,14 @@ export default function ScoreBoard({
   time,
   onNewGame,
   onUndo,
+  canUndo,
 }: ScoreBoardProps) {
   return (
     <section className={styles.container}>
       <div className={styles.content}>
         Score: {score} | Moves: {moves} | Time: {time}s
         <button onClick={onNewGame}>New Game</button>
-        <button onClick={onUndo} disabled={history.length === 0}>
+        <button onClick={onUndo} disabled={!canUndo}>
           Undo
         </button>
       </div>

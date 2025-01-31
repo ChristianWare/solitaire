@@ -67,7 +67,7 @@ export default function DropColumn({
         <div
           key={card.id}
           className={styles.cardWrapper}
-          style={{ marginBottom: "-215px" }}
+          style={{ marginBottom: card.faceUp ? "-205px" : "-240px" }} // Conditional margin
           onDoubleClick={() => onDoubleClickCard(colIndex, idx)}
         >
           {card.faceUp ? (
