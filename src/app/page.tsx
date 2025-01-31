@@ -154,57 +154,71 @@ export default function SolitairePage() {
   // ---------------------------
   // 6) MOVING CARDS => TABLEAU
   // ---------------------------
-  function moveStack(
-    fromCol: number,
-    fromCardIdx: number,
-    toCol: number
-  ): boolean {
-    if (fromCol === toCol) return false;
+function moveStack(
+  fromCol: number,
+  fromCardIdx: number,
+  toCol: number
+): boolean {
+  // Save current state to history
+  setHistory((prev) => [
+    ...prev,
+    {
+      tableau: JSON.parse(JSON.stringify(tableau)), // Deep copy
+      foundations: JSON.parse(JSON.stringify(foundations)),
+      stock: JSON.parse(JSON.stringify(stock)),
+      waste: JSON.parse(JSON.stringify(waste)),
+      score,
+      moves,
+    },
+  ]);
 
-    if (fromCol >= 0) {
-      const sourceColumn = [...tableau[fromCol]];
-      if (fromCardIdx < 0 || fromCardIdx >= sourceColumn.length) return false;
-      const movingStack = sourceColumn.slice(fromCardIdx);
-      if (movingStack.length === 0) return false;
-      const cardToMove = movingStack[0];
-      if (!cardToMove) return false;
-      const destColumn = [...tableau[toCol]];
-      if (!canPlaceOnTop(destColumn, cardToMove)) return false;
+  // Existing logic for moving cards
+  if (fromCol === toCol) return false;
 
-      sourceColumn.splice(fromCardIdx, movingStack.length);
-      destColumn.push(...movingStack);
-      if (
-        sourceColumn.length > 0 &&
-        !sourceColumn[sourceColumn.length - 1].faceUp
-      ) {
-        sourceColumn[sourceColumn.length - 1].faceUp = true;
-      }
-      const newTableau = [...tableau];
-      newTableau[fromCol] = sourceColumn;
-      newTableau[toCol] = destColumn;
-      setTableau(newTableau);
-      setMoves((m) => m + 1);
-      setScore((s) => s + 1);
-      return true;
-    } else if (fromCol === -1) {
-      const wasteCopy = [...waste];
-      if (wasteCopy.length === 0) return false;
-      const cardToMove = wasteCopy[0];
-      wasteCopy.shift();
-      setWaste(wasteCopy);
-      const newTableau = [...tableau];
-      if (toCol < 0 || toCol >= newTableau.length) return false;
-      const destColumn = [...newTableau[toCol]];
-      if (!canPlaceOnTop(destColumn, cardToMove)) return false;
-      destColumn.push(cardToMove);
-      newTableau[toCol] = destColumn;
-      setTableau(newTableau);
-      setMoves((m) => m + 1);
-      setScore((s) => s + 1);
-      return true;
+  if (fromCol >= 0) {
+    const sourceColumn = [...tableau[fromCol]];
+    if (fromCardIdx < 0 || fromCardIdx >= sourceColumn.length) return false;
+    const movingStack = sourceColumn.slice(fromCardIdx);
+    if (movingStack.length === 0) return false;
+    const cardToMove = movingStack[0];
+    if (!cardToMove) return false;
+    const destColumn = [...tableau[toCol]];
+    if (!canPlaceOnTop(destColumn, cardToMove)) return false;
+
+    sourceColumn.splice(fromCardIdx, movingStack.length);
+    destColumn.push(...movingStack);
+    if (
+      sourceColumn.length > 0 &&
+      !sourceColumn[sourceColumn.length - 1].faceUp
+    ) {
+      sourceColumn[sourceColumn.length - 1].faceUp = true;
     }
-    return false;
+    const newTableau = [...tableau];
+    newTableau[fromCol] = sourceColumn;
+    newTableau[toCol] = destColumn;
+    setTableau(newTableau);
+    setMoves((m) => m + 1);
+    setScore((s) => s + 1);
+    return true;
+  } else if (fromCol === -1) {
+    const wasteCopy = [...waste];
+    if (wasteCopy.length === 0) return false;
+    const cardToMove = wasteCopy[0];
+    wasteCopy.shift();
+    setWaste(wasteCopy);
+    const newTableau = [...tableau];
+    if (toCol < 0 || toCol >= newTableau.length) return false;
+    const destColumn = [...newTableau[toCol]];
+    if (!canPlaceOnTop(destColumn, cardToMove)) return false;
+    destColumn.push(cardToMove);
+    newTableau[toCol] = destColumn;
+    setTableau(newTableau);
+    setMoves((m) => m + 1);
+    setScore((s) => s + 1);
+    return true;
   }
+  return false;
+}
 
 function canPlaceOnTop(destColumn: Card[], card: Card) {
   if (destColumn.length === 0) {
@@ -323,6 +337,35 @@ function canPlaceOnTop(destColumn: Card[], card: Card) {
     }
   }
 
+  const [history, setHistory] = useState<
+    {
+      tableau: Card[][];
+      foundations: Foundations;
+      stock: Card[];
+      waste: Card[];
+      score: number;
+      moves: number;
+    }[]
+  >([]);
+
+  function undoMove() {
+    if (history.length === 0) return; // No moves to undo
+
+    // Get the previous state
+    const previousState = history[history.length - 1];
+
+    // Revert to the previous state
+    setTableau(previousState.tableau);
+    setFoundations(previousState.foundations);
+    setStock(previousState.stock);
+    setWaste(previousState.waste);
+    setScore(previousState.score);
+    setMoves(previousState.moves);
+
+    // Remove the last state from history
+    setHistory((prev) => prev.slice(0, -1));
+  }
+
   return (
     <ReactLenis root>
       <DndProvider backend={HTML5Backend}>
@@ -333,7 +376,13 @@ function canPlaceOnTop(destColumn: Card[], card: Card) {
           <Marquee />
           <section className={styles.gameBoard}>
             <LayoutWrapper>
-              <ScoreBoard score={score} moves={moves} time={time} />
+              <ScoreBoard
+                score={score}
+                moves={moves}
+                time={time}
+                onNewGame={startNewGame}
+                onUndo={undoMove}
+              />{" "}
               <div className={styles.top}>
                 <div className={styles.foundationsArea}>
                   <Foundations
@@ -352,14 +401,12 @@ function canPlaceOnTop(destColumn: Card[], card: Card) {
                   <Stock flipStockCard={flipStockCard} />
                 </div>
               </div>
-
               <Tableau
                 tableau={tableau}
                 moveStack={moveStack}
                 canPlaceOnTop={canPlaceOnTop}
                 onDoubleClickCard={handleDoubleClickCard}
               />
-
               {/* <button onClick={autoMoveToFoundation}>
             Auto Move to Foundation
           </button> */}
